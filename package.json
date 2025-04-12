@@ -4,10 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "vite": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "sync-palette": "node src\\styles\\sync-palette.js",
+    "dev": "pnpm run sync-palette && pnpm run vite",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -15,11 +17,14 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.2",
     "@mui/material": "^7.0.2",
+    "path": "^0.12.7",
     "react": "^18.3.0",
-    "react-dom": "^18.3.0"
+    "react-dom": "^18.3.0",
+    "tailwindcss": "^4.1.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@tailwindcss/vite": "^4.1.3",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.4",
     "@typescript-eslint/eslint-plugin": "^8.29.1",
@@ -30,6 +35,7 @@
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "fs": "0.0.1-security",
     "globals": "^15.15.0",
     "prettier": "^3.5.3",
     "prettier-eslint": "^16.3.0",
