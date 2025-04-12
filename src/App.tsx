@@ -1,4 +1,9 @@
 import { useState } from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Button from '@mui/material/Button';
+
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
@@ -6,8 +11,17 @@ import './App.css';
 function App() {
   const [count, setCount] = useState(0);
 
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const theme = createTheme({
+    palette: {
+      mode: prefersDarkMode ? 'dark' : 'light',
+    },
+  });
+
   return (
-    <>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -18,9 +32,12 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <Button
+          variant="contained"
+          onClick={() => setCount((count) => count + 1)}
+        >
           count is {count}
-        </button>
+        </Button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
@@ -36,7 +53,7 @@ function App() {
       >
         Click Here
       </button>
-    </>
+    </ThemeProvider>
   );
 }
 
