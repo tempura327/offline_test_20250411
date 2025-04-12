@@ -4,10 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "vite": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "sync-palette": "node src\\styles\\sync-palette.js",
+    "dev": "pnpm run sync-palette && pnpm run vite",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -33,6 +35,7 @@
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "fs": "0.0.1-security",
     "globals": "^15.15.0",
     "prettier": "^3.5.3",
     "prettier-eslint": "^16.3.0",
