@@ -22,11 +22,11 @@ const Layout = () => {
     <>
       <AppBar component="nav">
         <Toolbar>
-          <Typography variant="h6">小樹屋鬆餅</Typography>
+          <Typography variant="h6">小樹屋披薩</Typography>
           <div className="ml-auto">
             {navItems.map(({ text, to }) => (
               <Button
-                variant="text"
+                variant="link"
                 key={text}
                 onClick={() => {
                   navigate(to);
@@ -38,8 +38,8 @@ const Layout = () => {
           </div>
         </Toolbar>
       </AppBar>
-      <Toolbar />
-      <main className="p-4 h-screen">
+
+      <main>
         <Outlet />
       </main>
     </>
