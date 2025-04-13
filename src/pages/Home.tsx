@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import EmojiFoodBeverageIcon from '@mui/icons-material/EmojiFoodBeverage';
 import IcecreamIcon from '@mui/icons-material/Icecream';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 
 import Drawer from '../components/Drawer';
+import Counter from '../components/Counter';
 
 const pizzaNames = [
   '瑪格莉特披薩',
@@ -50,12 +54,60 @@ const drawerList = [
 ];
 
 const Home = () => {
+  // TODO: inital value should retrieve from store
+  const [selectedFoods, setSelectedFoods] = useState([
+    { id: 'f_001', number: 1 },
+    { id: 'f_002', number: 1 },
+  ]);
+
+  const handleUpdateSelectedFoods = (id: string, newValue: number) => {
+    setSelectedFoods((prev) => {
+      if (newValue < 1) {
+        return prev.filter((d) => {
+          return d.id !== id;
+        });
+      }
+
+      return prev.map((d) => {
+        if (d.id === id) {
+          return {
+            id: d.id,
+            number: newValue,
+          };
+        }
+
+        return d;
+      });
+    });
+  };
+
   return (
     <div className="flex h-full">
       <Drawer listData={drawerList} />
 
-      <div className="flex-1" style={{ outline: '1px solid blue' }}>
-        TODO: cart
+      <div className="flex-1 p-8" style={{ outline: '1px solid blue' }}>
+        <Typography variant="h4" align="left">
+          購物車
+        </Typography>
+
+        <div className="my-4">
+          {selectedFoods.map(({ id, number }) => (
+            <div className="flex items-center [&>*+*]:ml-2" key={id}>
+              {/* TODO: query mock data to get food name */}
+              <Typography>{id}</Typography>
+              <Counter
+                value={number}
+                onValueUpdate={(newValue) => {
+                  handleUpdateSelectedFoods(id, newValue);
+                }}
+              />
+            </div>
+          ))}
+        </div>
+
+        <Button variant="contained" className="float-left">
+          送出
+        </Button>
       </div>
     </div>
   );
