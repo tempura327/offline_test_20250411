@@ -2,7 +2,9 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Outlet } from 'react-router';
+import { RouterProvider } from 'react-router';
 
+import router from './pages/router';
 import '@/styles/App.css';
 
 function App() {
@@ -18,6 +20,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Outlet />
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }
