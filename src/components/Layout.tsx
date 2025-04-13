@@ -19,7 +19,7 @@ const Layout = () => {
   const navigate = useNavigate();
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <AppBar component="nav">
         <Toolbar>
           <Typography variant="h6">小樹屋披薩</Typography>
@@ -39,10 +39,12 @@ const Layout = () => {
         </Toolbar>
       </AppBar>
 
-      <main>
+      <Toolbar />
+
+      <main className="flex-1 overflow-y-scroll">
         <Outlet />
       </main>
-    </>
+    </div>
   );
 };
 
