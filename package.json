@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "vite": "vite",
+    "db:dev": "npx json-server src/db.json",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -38,6 +39,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "fs": "0.0.1-security",
     "globals": "^15.15.0",
+    "json-server": "1.0.0-beta.3",
     "prettier": "^3.5.3",
     "prettier-eslint": "^16.3.0",
     "typescript": "~5.7.2",
