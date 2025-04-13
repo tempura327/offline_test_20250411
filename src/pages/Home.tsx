@@ -4,72 +4,48 @@ import IcecreamIcon from '@mui/icons-material/Icecream';
 
 import Drawer from '../components/Drawer';
 
+const pizzaNames = [
+  '瑪格莉特披薩',
+  '夏威夷披薩',
+  '燻雞披薩',
+  '三倍起司披薩',
+  '墨西哥披薩',
+  '醬烤鮮菇披薩',
+];
+const icecreamNames = ['鮮奶霜淇淋', '紅茶霜淇淋', '咖啡霜淇淋'];
+const beverageNames = ['紅茶', '綠茶', '奶茶', '烏龍茶', '麥茶', '柳橙汁'];
+
+const getFoodList = (type: string) => (foodName: string) => {
+  const data = {
+    id: crypto.randomUUID(),
+    type,
+    name: foodName,
+  };
+
+  return {
+    text: foodName,
+    action: () => {
+      // TODO:
+      console.log('送去store', data);
+    },
+  };
+};
+
 const drawerList = [
   {
     text: '披薩',
     icon: <LocalPizzaIcon />,
-    childrenItems: [
-      {
-        text: '瑪格莉特披薩',
-        action: () => {
-          console.log('瑪格莉特披薩');
-        },
-      },
-      {
-        text: '夏威夷披薩',
-      },
-      {
-        text: '燻雞披薩',
-      },
-      {
-        text: '三倍起司披薩',
-      },
-      {
-        text: '墨西哥披薩',
-      },
-      {
-        text: '醬烤鮮菇披薩',
-      },
-    ],
+    childrenItems: pizzaNames.map(getFoodList('pizza')),
   },
   {
     text: '霜淇淋',
     icon: <IcecreamIcon />,
-    childrenItems: [
-      {
-        text: '鮮奶霜淇淋',
-      },
-      {
-        text: '紅茶霜淇淋',
-      },
-      {
-        text: '咖啡霜淇淋',
-      },
-    ],
+    childrenItems: icecreamNames.map(getFoodList('icecream')),
   },
   {
     text: '飲料',
     icon: <EmojiFoodBeverageIcon />,
-    childrenItems: [
-      {
-        text: '紅茶',
-      },
-      {
-        text: '綠茶',
-      },
-      {
-        text: '奶茶',
-      },
-      {
-        text: '烏龍茶',
-      },
-      {
-        text: '麥茶',
-      },
-      {
-        text: '柳橙汁',
-      },
-    ],
+    childrenItems: beverageNames.map(getFoodList('beverage')),
   },
 ];
 
