@@ -185,11 +185,16 @@ const Home = () => {
         </div>
         <div className="my-4">
           {selectedFoods.map((food) => {
-            const { id, name, number } = food;
+            const { id, name, number, price } = food;
 
             return (
-              <div className="flex items-center [&>*+*]:ml-2" key={id}>
-                <Typography className="text-left">{name}</Typography>
+              <div
+                className="w-full md:w-2/3 grid grid-cols-3 items-center [&>*+*]:ml-2"
+                key={id}
+              >
+                <Typography className="text-left">
+                  {name} ({price}元/個)
+                </Typography>
                 <Counter
                   value={number}
                   onValueUpdate={(newValue) => {
