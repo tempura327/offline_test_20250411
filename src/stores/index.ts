@@ -1,7 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import foodMenuReducer from './foodMenuSlice';
+
 const store = configureStore({
-  reducer: {},
+  reducer: {
+    foodMenu: foodMenuReducer,
+  },
 });
 
 export default store;
