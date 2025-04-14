@@ -162,10 +162,11 @@ const Home = () => {
     updateHistoryMuatate({
       content: selectedFoods,
       timeStamp: Date.now(),
+      totalPrice,
     });
 
     dispatch(resetSelectedFoods());
-  }, [dispatch, selectedFoods, updateHistoryMuatate]);
+  }, [dispatch, selectedFoods, updateHistoryMuatate, totalPrice]);
 
   return (
     <div className="flex h-full">
