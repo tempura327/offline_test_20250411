@@ -10,7 +10,7 @@ import CheckIcon from '@mui/icons-material/Check';
 
 import Drawer from '../components/Drawer';
 import Counter from '../components/Counter';
-import { useAppQuery } from '../hooks/api';
+import { useAppMutation, useAppQuery } from '../hooks/api';
 import { FoodType, Food } from '../utils/type';
 import { DAY_MILISECOND } from '../utils/constant';
 import { useAppSelector, useAppDispatch } from '../hooks/redux';
@@ -18,7 +18,9 @@ import {
   addSelectedFood,
   updateSelectedFoodNumber,
   removeSelectedFood,
+  resetSelectedFoods,
 } from '../stores/selectedFoodsSlice';
+import { HTTPMethod } from '../utils/request';
 
 type DrawerItem = {
   text: string;
@@ -63,6 +65,19 @@ const Home = () => {
     url: '/foods',
     queryOption: {
       staleTime: DAY_MILISECOND,
+    },
+  });
+
+  const { mutate: updateHistoryMuatate } = useAppMutation({
+    url: '/orderHistory',
+    method: HTTPMethod.Post,
+    mutateOption: {
+      onSuccess: () => {
+        alert('成功送出訂單');
+      },
+      onError: () => {
+        alert('送出訂單失敗');
+      },
     },
   });
 
@@ -143,6 +158,15 @@ const Home = () => {
     [dispatch, selectedFoods],
   );
 
+  const handleSubmitOrder = useCallback(() => {
+    updateHistoryMuatate({
+      content: selectedFoods,
+      timeStamp: Date.now(),
+    });
+
+    dispatch(resetSelectedFoods());
+  }, [dispatch, selectedFoods, updateHistoryMuatate]);
+
   return (
     <div className="flex h-full">
       <Drawer listData={drawerList} />
@@ -151,7 +175,13 @@ const Home = () => {
         <div className="flex justify-between">
           <Typography variant="h4">購物車</Typography>
 
-          <Button variant="contained">送出</Button>
+          <Button
+            variant="contained"
+            disabled={selectedFoods.length < 1}
+            onClick={handleSubmitOrder}
+          >
+            送出
+          </Button>
         </div>
         <div className="my-4">
           {selectedFoods.map((food) => {

@@ -44,10 +44,17 @@ const selectedFoodsSlice = createSlice({
         return food.id !== id;
       });
     },
+    resetSelectedFoods() {
+      return [];
+    },
   },
 });
 
-export const { addSelectedFood, updateSelectedFoodNumber, removeSelectedFood } =
-  selectedFoodsSlice.actions;
+export const {
+  addSelectedFood,
+  updateSelectedFoodNumber,
+  removeSelectedFood,
+  resetSelectedFoods,
+} = selectedFoodsSlice.actions;
 
 export default selectedFoodsSlice.reducer;
