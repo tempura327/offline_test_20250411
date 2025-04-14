@@ -11,3 +11,9 @@ export type Food = {
 };
 
 export type SelectedFood = Food & { number: number };
+
+export type Order = {
+  timeStamp: number;
+  content: SelectedFood[];
+  totalPrice: number;
+};

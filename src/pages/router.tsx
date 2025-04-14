@@ -3,7 +3,7 @@ import { lazy } from 'react';
 
 const Layout = lazy(() => import('../components/Layout.tsx'));
 const Home = lazy(() => import('./Home.tsx'));
-const History = lazy(() => import('./History.tsx'));
+const OrderHistory = lazy(() => import('./OrderHistory.tsx'));
 
 const router = createBrowserRouter([
   {
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/history',
-        element: <History />,
+        element: <OrderHistory />,
       },
     ],
   },
