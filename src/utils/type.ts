@@ -9,3 +9,5 @@ export type Food = {
   name: string;
   price: number;
 };
+
+export type SelectedFood = Food & { number: number };

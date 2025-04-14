@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import foodMenuReducer from './foodMenuSlice';
+import selectedFoodsReducer from './selectedFoodsSlice';
 
 const store = configureStore({
   reducer: {
-    foodMenu: foodMenuReducer,
+    selectedFoods: selectedFoodsReducer,
   },
 });
 
