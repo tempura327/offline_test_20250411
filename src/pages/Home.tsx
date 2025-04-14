@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, ReactNode, useCallback } from 'react';
 import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import EmojiFoodBeverageIcon from '@mui/icons-material/EmojiFoodBeverage';
 import IcecreamIcon from '@mui/icons-material/Icecream';
@@ -6,82 +6,166 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import CheckIcon from '@mui/icons-material/Check';
 
 import Drawer from '../components/Drawer';
 import Counter from '../components/Counter';
+import { useAppMutation, useAppQuery } from '../hooks/api';
+import { FoodType, Food } from '../utils/type';
+import { DAY_MILISECOND } from '../utils/constant';
+import { useAppSelector, useAppDispatch } from '../hooks/redux';
+import {
+  addSelectedFood,
+  updateSelectedFoodNumber,
+  removeSelectedFood,
+  resetSelectedFoods,
+} from '../stores/selectedFoodsSlice';
+import { HTTPMethod } from '../utils/request';
 
-const pizzaNames = [
-  '瑪格莉特披薩',
-  '夏威夷披薩',
-  '燻雞披薩',
-  '三倍起司披薩',
-  '墨西哥披薩',
-  '醬烤鮮菇披薩',
-];
-const icecreamNames = ['鮮奶霜淇淋', '紅茶霜淇淋', '咖啡霜淇淋'];
-const beverageNames = ['紅茶', '綠茶', '奶茶', '烏龍茶', '麥茶', '柳橙汁'];
+type DrawerItem = {
+  text: string;
+  icon?: ReactNode;
+  actions?: () => void;
+  childrenItems?: DrawerItem[];
+};
 
-const getFoodList = (type: string) => (foodName: string) => {
-  const data = {
-    id: crypto.randomUUID(),
-    type,
-    name: foodName,
-  };
-
+const getSubDrawerItem = (text: string, action: (data: Food) => void) => {
   return {
-    text: foodName,
-    action: () => {
-      // TODO:
-      console.log('送去store', data);
-    },
+    text,
+    action,
   };
 };
 
-const drawerList = [
-  {
-    text: '披薩',
-    icon: <LocalPizzaIcon />,
-    childrenItems: pizzaNames.map(getFoodList('pizza')),
-  },
-  {
-    text: '霜淇淋',
-    icon: <IcecreamIcon />,
-    childrenItems: icecreamNames.map(getFoodList('icecream')),
-  },
-  {
-    text: '飲料',
-    icon: <EmojiFoodBeverageIcon />,
-    childrenItems: beverageNames.map(getFoodList('beverage')),
-  },
-];
+const iconMap = {
+  ft_pizza: <LocalPizzaIcon />,
+  ft_iceCream: <IcecreamIcon />,
+  ft_beverage: <EmojiFoodBeverageIcon />,
+};
 
 const Home = () => {
-  // TODO: inital value should retrieve from store
-  const [selectedFoods, setSelectedFoods] = useState([
-    { id: 'f_001', number: 1 },
-    { id: 'f_002', number: 1 },
-  ]);
+  const selectedFoods = useAppSelector((state) => state.selectedFoods);
+  const dispatch = useAppDispatch();
 
-  const handleUpdateSelectedFoods = (id: string, newValue: number) => {
-    setSelectedFoods((prev) => {
-      if (newValue < 1) {
-        return prev.filter((d) => {
-          return d.id !== id;
+  const totalPrice = useMemo(() => {
+    if (selectedFoods.length < 1) return 0;
+
+    return selectedFoods.reduce((acc, { price, number }) => {
+      return acc + price * number;
+    }, 0);
+  }, [selectedFoods]);
+
+  const { data: foodTypesData } = useAppQuery<FoodType[]>({
+    url: '/foodTypes',
+    queryOption: {
+      staleTime: DAY_MILISECOND,
+    },
+  });
+
+  const { data: foodsData } = useAppQuery<Food[]>({
+    url: '/foods',
+    queryOption: {
+      staleTime: DAY_MILISECOND,
+    },
+  });
+
+  const { mutate: updateHistoryMuatate } = useAppMutation({
+    url: '/orderHistory',
+    method: HTTPMethod.Post,
+    mutateOption: {
+      onSuccess: () => {
+        alert('成功送出訂單');
+      },
+      onError: () => {
+        alert('送出訂單失敗');
+      },
+    },
+  });
+
+  const drawerList = useMemo(() => {
+    if (!foodTypesData) return [];
+
+    const result = foodTypesData.reduce<DrawerItem[]>((res, currentType) => {
+      const targetFoods =
+        foodsData?.filter(({ type }) => type === currentType.id) || [];
+
+      const childrenItems = targetFoods.map((food) => {
+        const data = getSubDrawerItem(food.name, () => {
+          const isFoodSelected = !!selectedFoods.find(
+            ({ id }) => id === food.id,
+          );
+
+          if (!isFoodSelected) {
+            dispatch(
+              addSelectedFood({
+                ...food,
+                number: 1,
+              }),
+            );
+          }
         });
+
+        const isSelected = !!selectedFoods.find(({ id }) => id === food.id);
+
+        return {
+          ...data,
+          icon: isSelected ? <CheckIcon /> : null,
+        };
+      });
+
+      return [
+        ...res,
+        {
+          text: currentType.name,
+          icon: currentType.id in iconMap ? iconMap[currentType.id] : null,
+          childrenItems: childrenItems,
+        },
+      ];
+    }, []);
+
+    return result;
+  }, [dispatch, foodTypesData, foodsData, selectedFoods]);
+
+  const handleUpdateSelectedFoods = useCallback(
+    (targetData: Food, newValue: number) => {
+      const { id: targetId } = targetData;
+      const isTargetFoodSelcted = !!selectedFoods.find(
+        ({ id }) => id === targetId,
+      );
+
+      if (!isTargetFoodSelcted) {
+        const payload = addSelectedFood({
+          ...targetData,
+          number: newValue,
+        });
+
+        dispatch(payload);
+
+        return;
       }
 
-      return prev.map((d) => {
-        if (d.id === id) {
-          return {
-            id: d.id,
-            number: newValue,
-          };
-        }
+      const payload =
+        newValue > 0
+          ? updateSelectedFoodNumber({
+              id: targetId,
+              newNumber: newValue,
+            })
+          : removeSelectedFood({
+              id: targetId,
+            });
 
-        return d;
-      });
+      dispatch(payload);
+    },
+    [dispatch, selectedFoods],
+  );
+
+  const handleSubmitOrder = useCallback(() => {
+    updateHistoryMuatate({
+      content: selectedFoods,
+      timeStamp: Date.now(),
     });
-  };
+
+    dispatch(resetSelectedFoods());
+  }, [dispatch, selectedFoods, updateHistoryMuatate]);
 
   return (
     <div className="flex h-full">
@@ -91,30 +175,46 @@ const Home = () => {
         <div className="flex justify-between">
           <Typography variant="h4">購物車</Typography>
 
-          <Button variant="contained">送出</Button>
+          <Button
+            variant="contained"
+            disabled={selectedFoods.length < 1}
+            onClick={handleSubmitOrder}
+          >
+            送出
+          </Button>
         </div>
-
         <div className="my-4">
-          {selectedFoods.map(({ id, number }) => (
-            <div className="flex items-center [&>*+*]:ml-2" key={id}>
-              {/* TODO: query mock data to get food name */}
-              <Typography>{id}</Typography>
-              <Counter
-                value={number}
-                onValueUpdate={(newValue) => {
-                  handleUpdateSelectedFoods(id, newValue);
-                }}
-              />
-              <IconButton
-                onClick={() => {
-                  handleUpdateSelectedFoods(id, 0);
-                }}
+          {selectedFoods.map((food) => {
+            const { id, name, number, price } = food;
+
+            return (
+              <div
+                className="w-full md:w-2/3 grid grid-cols-3 items-center [&>*+*]:ml-2"
+                key={id}
               >
-                <DeleteIcon />
-              </IconButton>
-            </div>
-          ))}
+                <Typography className="text-left">
+                  {name} ({price}元/個)
+                </Typography>
+                <Counter
+                  value={number}
+                  onValueUpdate={(newValue) => {
+                    handleUpdateSelectedFoods(food, newValue);
+                  }}
+                />
+
+                <IconButton
+                  onClick={() => {
+                    handleUpdateSelectedFoods(food, 0);
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+            );
+          })}
         </div>
+        <hr className="my-4" />
+        <div className="flex">總計: {totalPrice.toLocaleString()} 元</div>
       </div>
     </div>
   );
