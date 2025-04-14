@@ -4,6 +4,8 @@ import EmojiFoodBeverageIcon from '@mui/icons-material/EmojiFoodBeverage';
 import IcecreamIcon from '@mui/icons-material/Icecream';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 
 import Drawer from '../components/Drawer';
 import Counter from '../components/Counter';
@@ -85,10 +87,12 @@ const Home = () => {
     <div className="flex h-full">
       <Drawer listData={drawerList} />
 
-      <div className="flex-1 p-8" style={{ outline: '1px solid blue' }}>
-        <Typography variant="h4" align="left">
-          購物車
-        </Typography>
+      <div className="flex-1 p-8">
+        <div className="flex justify-between">
+          <Typography variant="h4">購物車</Typography>
+
+          <Button variant="contained">送出</Button>
+        </div>
 
         <div className="my-4">
           {selectedFoods.map(({ id, number }) => (
@@ -101,13 +105,16 @@ const Home = () => {
                   handleUpdateSelectedFoods(id, newValue);
                 }}
               />
+              <IconButton
+                onClick={() => {
+                  handleUpdateSelectedFoods(id, 0);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
             </div>
           ))}
         </div>
-
-        <Button variant="contained" className="float-left">
-          送出
-        </Button>
       </div>
     </div>
   );
