@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, ReactNode } from 'react';
 import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import EmojiFoodBeverageIcon from '@mui/icons-material/EmojiFoodBeverage';
 import IcecreamIcon from '@mui/icons-material/Icecream';
@@ -9,76 +9,109 @@ import IconButton from '@mui/material/IconButton';
 
 import Drawer from '../components/Drawer';
 import Counter from '../components/Counter';
+import { useAppQuery } from '../hooks/api';
+import { FoodType, Food } from '../utils/type';
+import { DAY_MILISECOND } from '../utils/constant';
 
-const pizzaNames = [
-  '瑪格莉特披薩',
-  '夏威夷披薩',
-  '燻雞披薩',
-  '三倍起司披薩',
-  '墨西哥披薩',
-  '醬烤鮮菇披薩',
-];
-const icecreamNames = ['鮮奶霜淇淋', '紅茶霜淇淋', '咖啡霜淇淋'];
-const beverageNames = ['紅茶', '綠茶', '奶茶', '烏龍茶', '麥茶', '柳橙汁'];
+type DrawerItem = {
+  text: string;
+  icon?: ReactNode;
+  actions?: () => void;
+  childrenItems?: DrawerItem[];
+};
 
-const getFoodList = (type: string) => (foodName: string) => {
-  const data = {
-    id: crypto.randomUUID(),
-    type,
-    name: foodName,
-  };
-
+const getSubDrawerItems = (text: string, action: (data: Food) => void) => {
   return {
-    text: foodName,
-    action: () => {
-      // TODO:
-      console.log('送去store', data);
-    },
+    text,
+    action,
   };
 };
 
-const drawerList = [
-  {
-    text: '披薩',
-    icon: <LocalPizzaIcon />,
-    childrenItems: pizzaNames.map(getFoodList('pizza')),
-  },
-  {
-    text: '霜淇淋',
-    icon: <IcecreamIcon />,
-    childrenItems: icecreamNames.map(getFoodList('icecream')),
-  },
-  {
-    text: '飲料',
-    icon: <EmojiFoodBeverageIcon />,
-    childrenItems: beverageNames.map(getFoodList('beverage')),
-  },
-];
+const iconMap = {
+  ft_pizza: <LocalPizzaIcon />,
+  ft_iceCream: <IcecreamIcon />,
+  ft_beverage: <EmojiFoodBeverageIcon />,
+};
+
+type SelectedFood = Food & { number: number };
 
 const Home = () => {
-  // TODO: inital value should retrieve from store
-  const [selectedFoods, setSelectedFoods] = useState([
-    { id: 'f_001', number: 1 },
-    { id: 'f_002', number: 1 },
-  ]);
+  const [selectedFoods, setSelectedFoods] = useState<SelectedFood[]>([]);
 
-  const handleUpdateSelectedFoods = (id: string, newValue: number) => {
+  const { data: foodTypesData } = useAppQuery<FoodType[]>({
+    url: '/foodTypes',
+    queryOption: {
+      staleTime: DAY_MILISECOND,
+    },
+  });
+
+  const { data: foodsData } = useAppQuery<Food[]>({
+    url: '/foods',
+    queryOption: {
+      staleTime: DAY_MILISECOND,
+      onSuccess: () => {
+        // TODO: 存到store
+        console.log('TODO: 存到store');
+      },
+    },
+  });
+
+  // TODO: data should retrieve from store
+  const drawerList = useMemo(() => {
+    if (!foodTypesData) return [];
+
+    const result = foodTypesData.reduce<DrawerItem[]>((res, currentType) => {
+      const targetFoods =
+        foodsData?.filter(({ type }) => type === currentType.id) || [];
+
+      const childrenItems = targetFoods.map((food) => {
+        const actions = getSubDrawerItems(food.name, () => {
+          setSelectedFoods((prev) => [
+            ...prev,
+            {
+              ...food,
+              number: 1,
+            },
+          ]);
+        });
+
+        return actions;
+      });
+
+      return [
+        ...res,
+        {
+          text: currentType.name,
+          icon: currentType.id in iconMap ? iconMap[currentType.id] : null,
+          childrenItems: childrenItems,
+        },
+      ];
+    }, []);
+
+    return result;
+  }, [foodTypesData, foodsData]);
+
+  const handleUpdateSelectedFoods = (targetId: string, newValue: number) => {
     setSelectedFoods((prev) => {
       if (newValue < 1) {
-        return prev.filter((d) => {
-          return d.id !== id;
+        return prev.filter(({ id }) => {
+          return id !== targetId;
         });
       }
 
-      return prev.map((d) => {
-        if (d.id === id) {
+      return prev.map(({ id, ...rest }) => {
+        if (id === targetId) {
           return {
-            id: d.id,
+            id,
+            ...rest,
             number: newValue,
           };
         }
 
-        return d;
+        return {
+          id,
+          ...rest,
+        };
       });
     });
   };
@@ -95,10 +128,9 @@ const Home = () => {
         </div>
 
         <div className="my-4">
-          {selectedFoods.map(({ id, number }) => (
+          {selectedFoods.map(({ id, name, number }) => (
             <div className="flex items-center [&>*+*]:ml-2" key={id}>
-              {/* TODO: query mock data to get food name */}
-              <Typography>{id}</Typography>
+              <Typography>{name}</Typography>
               <Counter
                 value={number}
                 onValueUpdate={(newValue) => {
