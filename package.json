@@ -11,7 +11,8 @@
     "lint:fix": "eslint . --fix",
     "sync-palette": "node src\\styles\\sync-palette.js",
     "dev": "pnpm run sync-palette && pnpm run vite",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -49,6 +50,7 @@
     "prettier-eslint": "^16.3.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitest": "^3.1.1"
   }
 }
