@@ -44,6 +44,9 @@ const selectedFoodsSlice = createSlice({
         return food.id !== id;
       });
     },
+    setSelectedFoods(state, action: PayloadAction<SelectedFood[]>) {
+      state.push(...action.payload);
+    },
     resetSelectedFoods() {
       return [];
     },
@@ -54,6 +57,7 @@ export const {
   addSelectedFood,
   updateSelectedFoodNumber,
   removeSelectedFood,
+  setSelectedFoods,
   resetSelectedFoods,
 } = selectedFoodsSlice.actions;
 
