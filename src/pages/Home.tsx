@@ -190,7 +190,7 @@ const Home = () => {
 
             return (
               <div
-                className="w-full md:w-2/3 grid grid-cols-3 items-center [&>*+*]:ml-2"
+                className="grid grid-cols-3 items-center [&>*+*]:ml-2"
                 key={id}
               >
                 <Typography className="text-left">
