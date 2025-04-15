@@ -1,8 +1,15 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000',
 });
+
+export const clientsApi = {
+  getClients: async () => {
+    const response = await axios.get('http://localhost:3000/orderHistory');
+    return response.data;
+  },
+};
 
 axiosInstance.interceptors.response.use(
   (response) => {

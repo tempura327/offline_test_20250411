@@ -133,68 +133,6 @@
     }
   ],
   "orderHistory": [
-    {
-      "id": "bfa1",
-      "content": [
-        {
-          "id": "f_007",
-          "type": "ft_iceCream",
-          "name": "鮮奶霜淇淋",
-          "price": 35,
-          "number": 1
-        },
-        {
-          "id": "f_008",
-          "type": "ft_iceCream",
-          "name": "紅茶霜淇淋",
-          "price": 50,
-          "number": 1
-        }
-      ],
-      "timeStamp": 1744676414488,
-      "totalPrice": 85
-    },
-    {
-      "id": "de40",
-      "content": [
-        {
-          "id": "f_010",
-          "type": "ft_beverage",
-          "name": "紅茶",
-          "price": 20,
-          "number": 3
-        },
-        {
-          "id": "f_011",
-          "type": "ft_beverage",
-          "name": "綠茶",
-          "price": 20,
-          "number": 1
-        },
-        {
-          "id": "f_002",
-          "type": "ft_pizza",
-          "name": "夏威夷披薩",
-          "price": 120,
-          "number": 1
-        }
-      ],
-      "timeStamp": 1744676717187,
-      "totalPrice": 200
-    },
-    {
-      "id": "f736",
-      "content": [
-        {
-          "id": "f_007",
-          "type": "ft_iceCream",
-          "name": "鮮奶霜淇淋",
-          "price": 35,
-          "number": 4
-        }
-      ],
-      "timeStamp": 1744676728586,
-      "totalPrice": 1400
-    }
+    
   ]
 }

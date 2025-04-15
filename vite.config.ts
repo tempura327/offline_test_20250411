@@ -15,4 +15,7 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
+  test: {
+    environment: 'jsdom', // ✅ 加這行
+  },
 });
