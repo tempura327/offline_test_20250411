@@ -1,19 +1,11 @@
-import { createTheme } from '@mui/material/styles';
 import fs from 'fs';
+
+import getTheme from './theme.js';
 
 console.log('Working on syncing MUI palette to Tailwind palette...');
 
-const { palette: darkPalette } = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
-
-const { palette: lightPalette } = createTheme({
-  palette: {
-    mode: 'light',
-  },
-});
+const { palette: darkPalette } = getTheme('dark');
+const { palette: lightPalette } = getTheme('light');
 
 const defaultRootStyle = `
 @import "tailwindcss";
@@ -32,7 +24,14 @@ const defaultRootStyle = `
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-`;
+
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}`;
 
 /**
  * @const
