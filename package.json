@@ -4,13 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "vite": "vite",
+    "dev": "vite",
     "db:dev": "npx json-server src/db.json",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "sync-palette": "node src\\styles\\sync-palette.js",
-    "dev": "pnpm run sync-palette && pnpm run vite",
+    "sync-palette": "npx tsc ./src/styles/theme.ts --module NodeNext --moduleResolution nodenext && node src/styles/sync-palette.js",
     "preview": "vite preview",
     "test": "vitest"
   },
