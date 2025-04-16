@@ -18,6 +18,7 @@ const Counter: FunctionComponent<CounterProps> = ({ value, onValueUpdate }) => {
 
           onValueUpdate(value - 1);
         }}
+        aria-label="minus"
       >
         <RemoveIcon></RemoveIcon>
       </IconButton>
@@ -37,6 +38,7 @@ const Counter: FunctionComponent<CounterProps> = ({ value, onValueUpdate }) => {
         onClick={() => {
           onValueUpdate(value + 1);
         }}
+        aria-label="plus"
       >
         <AddIcon></AddIcon>
       </IconButton>
