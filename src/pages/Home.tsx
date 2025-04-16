@@ -12,7 +12,7 @@ import Drawer from '@/components/Drawer';
 import Counter from '@/components/Counter';
 import { useAppMutation, useAppQuery } from '@/hooks/api';
 import { FoodType, Food } from '@/utils/type';
-import { DAY_MILISECOND } from '@/utils/constant';
+import { DAY_MILLISECOND } from '@/utils/constant';
 import { useAppSelector, useAppDispatch } from '@/hooks/redux';
 import {
   addSelectedFood,
@@ -57,18 +57,18 @@ const Home = () => {
   const { data: foodTypesData } = useAppQuery<FoodType[]>({
     url: '/foodTypes',
     queryOption: {
-      staleTime: DAY_MILISECOND,
+      staleTime: DAY_MILLISECOND,
     },
   });
 
   const { data: foodsData } = useAppQuery<Food[]>({
     url: '/foods',
     queryOption: {
-      staleTime: DAY_MILISECOND,
+      staleTime: DAY_MILLISECOND,
     },
   });
 
-  const { mutate: updateHistoryMuatate } = useAppMutation({
+  const { mutate: updateHistoryMutate } = useAppMutation({
     url: '/orderHistory',
     method: HTTPMethod.Post,
     mutateOption: {
@@ -128,11 +128,11 @@ const Home = () => {
   const handleUpdateSelectedFoods = useCallback(
     (targetData: Food, newValue: number) => {
       const { id: targetId } = targetData;
-      const isTargetFoodSelcted = !!selectedFoods.find(
+      const isTargetFoodSelected = !!selectedFoods.find(
         ({ id }) => id === targetId,
       );
 
-      if (!isTargetFoodSelcted) {
+      if (!isTargetFoodSelected) {
         const payload = addSelectedFood({
           ...targetData,
           number: newValue,
@@ -159,14 +159,14 @@ const Home = () => {
   );
 
   const handleSubmitOrder = useCallback(() => {
-    updateHistoryMuatate({
+    updateHistoryMutate({
       content: selectedFoods,
       timeStamp: Date.now(),
       totalPrice,
     });
 
     dispatch(resetSelectedFoods());
-  }, [dispatch, selectedFoods, updateHistoryMuatate, totalPrice]);
+  }, [dispatch, selectedFoods, updateHistoryMutate, totalPrice]);
 
   return (
     <div className="flex h-full">
