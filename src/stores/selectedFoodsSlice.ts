@@ -45,7 +45,26 @@ const selectedFoodsSlice = createSlice({
       });
     },
     setSelectedFoods(state, action: PayloadAction<SelectedFood[]>) {
-      state.push(...action.payload);
+      const newState = action.payload.reduce<SelectedFood[]>(
+        (res, { id, number, ...rest }) => {
+          const isFoodAlreadyInState = !!res.find((food) => food.id === id);
+
+          if (!isFoodAlreadyInState) {
+            return [...res, { id, number, ...rest }];
+          }
+
+          return res.map((food) => {
+            if (food.id === id) {
+              return { ...food, number: food.number + number };
+            }
+
+            return food;
+          });
+        },
+        state,
+      );
+
+      return newState;
     },
     resetSelectedFoods() {
       return [];

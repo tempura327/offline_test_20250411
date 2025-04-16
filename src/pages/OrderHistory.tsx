@@ -6,13 +6,15 @@ import { format } from 'date-fns/format';
 import { useNavigate } from 'react-router';
 
 import { Order as OrderContent } from '@/utils/type';
-import { useAppQuery } from '@/hooks/api';
+import { useAppQuery, useAppMutation } from '@/hooks/api';
 import { useAppDispatch } from '@/hooks/redux';
 import { setSelectedFoods } from '@/stores/selectedFoodsSlice';
+import { HTTPMethod } from '@/utils/request';
 
 type OrderProps = OrderContent;
 
 const Order: FunctionComponent<OrderProps> = ({
+  id,
   content,
   timeStamp,
   totalPrice,
@@ -20,10 +22,27 @@ const Order: FunctionComponent<OrderProps> = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  const { mutate: deleteOrderHistoryMutate } = useAppMutation({
+    url: `/orderHistory/${id}`,
+    method: HTTPMethod.Delete,
+    mutateOption: {
+      onSuccess: () => {
+        alert('刪除成功');
+      },
+      onError: () => {
+        alert('刪除失敗');
+      },
+    },
+  });
+
   const handleSetSelectedFoods = useCallback(() => {
     dispatch(setSelectedFoods(content));
     navigate('/');
   }, [content, dispatch, navigate]);
+
+  const handleDeleteHistory = useCallback(() => {
+    deleteOrderHistoryMutate({});
+  }, [deleteOrderHistoryMutate]);
 
   return (
     <Paper className="p-6 w-1/2 [&>*+*]:!mt-8">
@@ -32,14 +51,27 @@ const Order: FunctionComponent<OrderProps> = ({
           {format(timeStamp, 'yyyy/MM/dd hh:mm')}
         </Typography>
 
-        <Button variant="outlined" onClick={handleSetSelectedFoods}>
-          再點一次
-        </Button>
+        <div className="[&>*+*]:!ml-4">
+          <Button variant="outlined" onClick={handleSetSelectedFoods}>
+            再點一次
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleDeleteHistory}
+          >
+            刪除紀錄
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-y-2">
         {content.map(({ name, price, number }) => (
-          <Typography variant="body1" className="text-left">
+          <Typography
+            variant="body1"
+            className="text-left"
+            key={`${timeStamp}-${name}`}
+          >
             {name} ({price}) * {number}個
           </Typography>
         ))}
@@ -64,7 +96,7 @@ const OrderHistory = () => {
       </Typography>
 
       <div className="flex flex-col items-center mt-4 [&>*+*]:mt-4">
-        {data?.map((order) => <Order {...order} />)}
+        {data?.map((order) => <Order {...order} key={order.timeStamp} />)}
       </div>
     </div>
   );
