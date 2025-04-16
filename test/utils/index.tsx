@@ -3,10 +3,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Provider as ReduxProvider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PropsWithChildren } from 'react';
+import { render } from '@testing-library/react';
 
 import store from '@/stores';
 
-const createWrapper = () => {
+const createWrapper = ({ children }: PropsWithChildren) => {
   const theme = createTheme({
     palette: {
       mode: 'dark',
@@ -15,7 +16,7 @@ const createWrapper = () => {
 
   const queryClient = new QueryClient();
 
-  return ({ children }: PropsWithChildren) => (
+  return render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
@@ -24,7 +25,7 @@ const createWrapper = () => {
           {children}
         </QueryClientProvider>
       </ReduxProvider>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 };
 
