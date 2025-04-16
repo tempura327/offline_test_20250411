@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { SelectedFood } from '../utils/type';
+import { SelectedFood } from '@/utils/type';
 
 type RemoveFoodParams = {
   id: string;

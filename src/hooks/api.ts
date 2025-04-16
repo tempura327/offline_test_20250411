@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { AxiosRequestConfig } from 'axios';
 
-import { request, get, HTTPMethod } from '../utils/request';
+import { request, get, HTTPMethod } from '@/utils/request';
 
 interface UseAppQueryParams<TResponse> {
   url: string;

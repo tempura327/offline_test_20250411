@@ -8,19 +8,19 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import CheckIcon from '@mui/icons-material/Check';
 
-import Drawer from '../components/Drawer';
-import Counter from '../components/Counter';
-import { useAppMutation, useAppQuery } from '../hooks/api';
-import { FoodType, Food } from '../utils/type';
-import { DAY_MILISECOND } from '../utils/constant';
-import { useAppSelector, useAppDispatch } from '../hooks/redux';
+import Drawer from '@/components/Drawer';
+import Counter from '@/components/Counter';
+import { useAppMutation, useAppQuery } from '@/hooks/api';
+import { FoodType, Food } from '@/utils/type';
+import { DAY_MILISECOND } from '@/utils/constant';
+import { useAppSelector, useAppDispatch } from '@/hooks/redux';
 import {
   addSelectedFood,
   updateSelectedFoodNumber,
   removeSelectedFood,
   resetSelectedFoods,
-} from '../stores/selectedFoodsSlice';
-import { HTTPMethod } from '../utils/request';
+} from '@/stores/selectedFoodsSlice';
+import { HTTPMethod } from '@/utils/request';
 
 type DrawerItem = {
   text: string;
