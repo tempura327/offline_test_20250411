@@ -5,10 +5,10 @@ import { FunctionComponent, useCallback } from 'react';
 import { format } from 'date-fns/format';
 import { useNavigate } from 'react-router';
 
-import { Order as OrderContent } from '../utils/type';
-import { useAppQuery } from '../hooks/api';
-import { useAppDispatch } from '../hooks/redux';
-import { setSelectedFoods } from '../stores/selectedFoodsSlice';
+import { Order as OrderContent } from '@/utils/type';
+import { useAppQuery } from '@/hooks/api';
+import { useAppDispatch } from '@/hooks/redux';
+import { setSelectedFoods } from '@/stores/selectedFoodsSlice';
 
 type OrderProps = OrderContent;
 

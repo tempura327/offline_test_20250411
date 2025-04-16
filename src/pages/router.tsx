@@ -1,9 +1,9 @@
 import { createBrowserRouter } from 'react-router';
 import { lazy } from 'react';
 
-const Layout = lazy(() => import('../components/Layout.tsx'));
-const Home = lazy(() => import('./Home.tsx'));
-const OrderHistory = lazy(() => import('./OrderHistory.tsx'));
+const Layout = lazy(() => import('@/components/Layout.tsx'));
+const Home = lazy(() => import('@/pages/Home.tsx'));
+const OrderHistory = lazy(() => import('@/pages/OrderHistory.tsx'));
 
 const router = createBrowserRouter([
   {
