@@ -1,1 +1,1 @@
-export const DAY_MILISECOND = 24 * 60 * 60 * 1000;
+export const DAY_MILLISECOND = 24 * 60 * 60 * 1000;
