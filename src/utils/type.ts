@@ -13,6 +13,7 @@ export type Food = {
 export type SelectedFood = Food & { number: number };
 
 export type Order = {
+  id: string;
   timeStamp: number;
   content: SelectedFood[];
   totalPrice: number;
