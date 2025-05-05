@@ -23,6 +23,15 @@
     margin: 0;
   }
 }
+  
+.light-mode{
+  color-scheme: light;
+}
+
+.dark-mode{
+  color-scheme: dark;
+}
+
 
 @theme{
 --color-primary-main: light-dark(#1976d2, #90caf9);
