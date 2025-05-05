@@ -31,7 +31,16 @@ const defaultRootStyle = `
     -webkit-appearance: none;
     margin: 0;
   }
-}`;
+}
+  
+.light-mode{
+  color-scheme: light;
+}
+
+.dark-mode{
+  color-scheme: dark;
+}
+`;
 
 /**
  * @const
