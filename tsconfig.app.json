@@ -24,9 +24,13 @@
 
     /* Path Aliases */
     "baseUrl": ".",
+    // 告訴TS"@"代表哪個絕對路徑
+    // 沒設定的話TS會報錯"Cannot find module '@/components/Counter' or its corresponding type declarations."
     "paths": {
       "@/*": ["src/*"]
     }
   },
+  // 告訴TS要編譯那些路徑的.ts檔
+  // 也可以不設定，這樣預設會編譯扣除掉exclude定義的路徑後，和tsconfig.json 同層級、以下的所有 .ts檔
   "include": ["src", "test"]
 }
